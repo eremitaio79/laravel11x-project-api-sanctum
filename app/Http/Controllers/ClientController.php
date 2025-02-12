@@ -13,6 +13,7 @@ class ClientController extends Controller
     public function index()
     {
         // Retorna todos os clientes.
+        // Return all clients in the database.
         return response()->json(
             Client::all(),
             200
@@ -31,7 +32,11 @@ class ClientController extends Controller
             'phone' => 'required|string',
         ]);
 
-        // Criação do cliente.
+        /**
+         * Criação do cliente.
+         * Todos os dados do cliente são passados via request.
+         */
+
         $client = Client::create($request->all());
 
         return response()->json(
@@ -47,7 +52,20 @@ class ClientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $client = Client::find($id);
+
+        try {
+            $client = Client::findOrFail($id);
+            return response()->json($client, 200);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Cliente não encontrado!',
+                ],
+                404
+            );
+        }
+
     }
 
     /**
@@ -55,7 +73,32 @@ class ClientController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:clients,email,' . $id,
+            'phone' => 'required|string',
+        ]);
+
+        // Update de client data in the database.
+        $client = Client::find($id);
+
+        if ($client) {
+            $client->update($request->all());
+            return response()->json(
+                [
+                    'message' => 'Cliente atualizado com sucesso!', // Mensagem de sucesso.
+                    'data' => $client, // Retorna os dados do cliente atualizados.
+                ],
+                200 // Status code 200 (OK).
+            );
+        } else {
+            return response()->json(
+                [
+                    'message' => 'Cliente não encontrado!', // Mensagem de erro.
+                ],
+                404 // Status code 404 (Not Found).
+            );
+        }
     }
 
     /**
@@ -63,6 +106,24 @@ class ClientController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Delete client from the database.
+        $client = Client::find($id);
+
+        if ($client) {
+            $client->delete();
+            return response()->json(
+                [
+                    'message' => 'Cliente removido com sucesso!', // Mensagem de sucesso.
+                ],
+                200 // Status code 200 (OK).
+            );
+        } else {
+            return response()->json(
+                [
+                    'message' => 'Cliente não encontrado!', // Mensagem de erro.
+                ],
+                404 // Status code 404 (Not Found).
+            );
+        }
     }
 }
