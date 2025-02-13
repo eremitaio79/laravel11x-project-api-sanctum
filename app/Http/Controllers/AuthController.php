@@ -41,4 +41,19 @@ class AuthController extends Controller
             'message' => 'Login successful!'
         ]);
     }
+
+
+    public function logout(Request $request)
+    {
+        // Revoke the token.
+        $request->user()->tokens()->delete();
+
+        // return response()->json([
+        //     'message' => 'Logout successful!'
+        // ], 200);
+
+        return ApiResponse::success([
+            'message' => 'Logout successful!'
+        ]);
+    }
 }

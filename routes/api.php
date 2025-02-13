@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Services\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -24,17 +23,17 @@ Route::get('/status', function () {
     return ApiResponse::success(
         [
             'status' => 'ok',
-            // 'message' => 'API is working fine'
         ]
     );
-});
+})->middleware('auth:sanctum');
 
 /**
  * Rotas de clients geradas de forma automática pelo Laravel.
  * Estas rotas são associadas automaticamente aos respectivos métodos da controller de clients. */
-Route::apiResource('clients', ClientController::class);
+Route::apiResource('clients', ClientController::class)->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 /** Rotas de clients definidas manualmente. */
 // Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');

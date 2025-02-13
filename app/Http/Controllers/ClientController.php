@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Services\ApiResponse;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -14,11 +15,13 @@ class ClientController extends Controller
     {
         // Retorna todos os clientes.
         // Return all clients in the database.
-        return response()->json(
-            Client::all(),
-            200
-        );
+        // return response()->json(
+        //     Client::all(),
+        //     200
+        // );
+        return ApiResponse::success(Client::all());
     }
+
 
     /**
      * Store a newly created resource in storage. (Inserir novo cliente)
@@ -39,13 +42,15 @@ class ClientController extends Controller
 
         $client = Client::create($request->all());
 
-        return response()->json(
-            [
-                'message' => 'Cliente criado com sucesso!',
-                'data' => $client,
-            ], 200
-        );
+        return ApiResponse::success($client);
+        // return response()->json(
+        //     [
+        //         'message' => 'Cliente criado com sucesso!',
+        //         'data' => $client,
+        //     ], 200
+        // );
     }
+
 
     /**
      * Display the specified resource. (Exibir detalhes do cliente)
@@ -56,17 +61,19 @@ class ClientController extends Controller
 
         try {
             $client = Client::findOrFail($id);
-            return response()->json($client, 200);
+            // return response()->json($client, 200);
+            return ApiResponse::success($client, 200);
         } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Cliente não encontrado!',
-                ],
-                404
-            );
+            // return response()->json(
+            //     [
+            //         'message' => 'Cliente não encontrado!',
+            //     ],
+            //     404
+            // );
+            return ApiResponse::error('Cliente não encontrado!', 404);
         }
-
     }
+
 
     /**
      * Update the specified resource in storage. (Atualizar dados do cliente)
@@ -84,22 +91,25 @@ class ClientController extends Controller
 
         if ($client) {
             $client->update($request->all());
-            return response()->json(
-                [
-                    'message' => 'Cliente atualizado com sucesso!', // Mensagem de sucesso.
-                    'data' => $client, // Retorna os dados do cliente atualizados.
-                ],
-                200 // Status code 200 (OK).
-            );
+            // return response()->json(
+            //     [
+            //         'message' => 'Cliente atualizado com sucesso!', // Mensagem de sucesso.
+            //         'data' => $client, // Retorna os dados do cliente atualizados.
+            //     ],
+            //     200 // Status code 200 (OK).
+            // );
+            return ApiResponse::success($client);
         } else {
-            return response()->json(
-                [
-                    'message' => 'Cliente não encontrado!', // Mensagem de erro.
-                ],
-                404 // Status code 404 (Not Found).
-            );
+            // return response()->json(
+            //     [
+            //         'message' => 'Cliente não encontrado!', // Mensagem de erro.
+            //     ],
+            //     404 // Status code 404 (Not Found).
+            // );
+            return ApiResponse::error('Cliente não encontrado!', 404);
         }
     }
+
 
     /**
      * Remove the specified resource from storage. (Remover cliente)
@@ -111,19 +121,21 @@ class ClientController extends Controller
 
         if ($client) {
             $client->delete();
-            return response()->json(
-                [
-                    'message' => 'Cliente removido com sucesso!', // Mensagem de sucesso.
-                ],
-                200 // Status code 200 (OK).
-            );
+            // return response()->json(
+            //     [
+            //         'message' => 'Cliente removido com sucesso!', // Mensagem de sucesso.
+            //     ],
+            //     200 // Status code 200 (OK).
+            // );
+            return ApiResponse::success('Cliente removido com sucesso!');
         } else {
-            return response()->json(
-                [
-                    'message' => 'Cliente não encontrado!', // Mensagem de erro.
-                ],
-                404 // Status code 404 (Not Found).
-            );
+            // return response()->json(
+            //     [
+            //         'message' => 'Cliente não encontrado!', // Mensagem de erro.
+            //     ],
+            //     404 // Status code 404 (Not Found).
+            // );
+            return ApiResponse::error('Cliente não encontrado!', 404);
         }
     }
 }
