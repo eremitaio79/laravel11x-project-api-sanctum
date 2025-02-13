@@ -8,6 +8,10 @@ class ApiResponse
 {
     /**
      *  Sucesso.
+     *
+     * @param mixed $data
+     * @param int $code
+     * @return JsonResponse
      *  */
     public static function success($data, $code = 200) : JsonResponse
     {
@@ -19,22 +23,27 @@ class ApiResponse
 
     /**
      * Erro.
+     *
+     * @param mixed $message
+     * @param int $code
+     * @return JsonResponse
      */
     public static function error($message = null, $code = 500) : JsonResponse
     {
         return response()->json([
-            // 'data' => $data,
             'message' => $message,
         ], $code);
     }
 
     /**
      * Unauthorized.
+     *
+     * @param int $code
+     * @return JsonResponse
      */
-    public static function unauthorized($code = 500) : JsonResponse
+    public static function unauthorized($code = 401) : JsonResponse
     {
         return response()->json([
-            // 'data' => $data,
             'message' => 'Unauthorized access!',
         ], $code);
     }
